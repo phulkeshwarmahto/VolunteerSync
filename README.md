@@ -798,7 +798,7 @@ npm install axios react-router-dom socket.io-client recharts \
 
 **Live URL format:**
 - Frontend: `https://volunteersync.vercel.app`
-- Backend: `https://volunteersync-api.up.railway.app`
+- Backend: `https://volunteersync-api.on.render.app`
 
 ---
 
@@ -816,7 +816,7 @@ npm install axios react-router-dom socket.io-client recharts \
 
 ## Team
 
-> **Team Name:** ___________
+> **Team Name:** Code4Challenge
 > **College:** National Institute of Advanced Manufacturing Technology (NIAMT), Ranchi
 > **Track:** Smart Resource Allocation — Data-Driven Volunteer Coordination for Social Impact
 > **Hackathon:** Hack2Skill Solution Challenge 2026
