@@ -8,6 +8,9 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import TasksPage from './pages/TasksPage';
+import ResourcesPage from './pages/ResourcesPage';
+import CrisisPage from './pages/CrisisPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 
 export default function App() {
   return (
@@ -23,10 +26,13 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/leaderboard" element={<LeaderboardPage />} />
             </Route>
 
             <Route element={<ProtectedRoute roles={['coordinator']} />}>
               <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/crisis" element={<CrisisPage />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

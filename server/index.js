@@ -52,6 +52,10 @@ app.use('/api/volunteers', require('./routes/volunteers'));
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/match', require('./routes/match'));
 app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/resources', require('./routes/resources'));
+app.use('/api/forecast', require('./routes/forecast'));
+app.use('/api/crisis', require('./routes/crisis'));
+app.use('/api/routing', require('./routes/routing'));
 
 require('./socket/socketHandler')(io);
 

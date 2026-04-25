@@ -21,6 +21,9 @@ const VolunteerSchema = new mongoose.Schema(
       default: 'Beginner',
     },
     totalTasks: { type: Number, default: 0, min: 0 },
+    reputationScore: { type: Number, default: 50, min: 0, max: 100 },
+    totalPoints: { type: Number, default: 0, min: 0 },
+    badges: [{ type: String, trim: true }],
   },
   { timestamps: true }
 );

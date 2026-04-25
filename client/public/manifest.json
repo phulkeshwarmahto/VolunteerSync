@@ -1,0 +1,42 @@
+{
+  "name": "VolunteerSync",
+  "short_name": "VolSync",
+  "description": "Intelligent disaster relief volunteer coordination platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ea",
+  "theme_color": "#1f7a8c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "Open coordinator dashboard"
+    },
+    {
+      "name": "Tasks",
+      "url": "/tasks",
+      "description": "View and manage tasks"
+    },
+    {
+      "name": "Crisis Mode",
+      "url": "/crisis",
+      "description": "Activate emergency protocol"
+    }
+  ]
+}

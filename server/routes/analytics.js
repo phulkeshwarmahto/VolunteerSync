@@ -174,4 +174,73 @@ router.get('/timeline', protect, requireRole('coordinator'), async (req, res) =>
   }
 });
 
+router.get('/skill-gaps', protect, requireRole('coordinator'), async (req, res) => {
+  try {
+    // Get all required skills from open tasks per zone
+    const openTasks = await Task.find({ status: { $in: ['Open', 'Assigned', 'In Progress'] } }).lean();
+    const volunteers = await Volunteer.find({ role: 'volunteer' }).lean();
+
+    // Build zone -> available skills map
+    const zoneVolunteerSkills = {};
+    volunteers.forEach((v) => {
+      const zone = v.location?.zone || 'Unassigned';
+      if (!zoneVolunteerSkills[zone]) zoneVolunteerSkills[zone] = new Set();
+      (v.skills || []).forEach((skill) => zoneVolunteerSkills[zone].add(skill.toLowerCase().trim()));
+    });
+
+    // Build zone -> required skills map
+    const zoneRequiredSkills = {};
+    openTasks.forEach((t) => {
+      const zone = t.zone || 'Unassigned';
+      if (!zoneRequiredSkills[zone]) zoneRequiredSkills[zone] = {};
+      (t.requiredSkills || []).forEach((skill) => {
+        const s = skill.toLowerCase().trim();
+        zoneRequiredSkills[zone][s] = (zoneRequiredSkills[zone][s] || 0) + 1;
+      });
+    });
+
+    // Find gaps
+    const gaps = [];
+    Object.entries(zoneRequiredSkills).forEach(([zone, skillCounts]) => {
+      const available = zoneVolunteerSkills[zone] || new Set();
+      Object.entries(skillCounts).forEach(([skill, count]) => {
+        if (!available.has(skill)) {
+          gaps.push({ zone, skill, tasksNeedingSkill: count, volunteersWithSkill: 0 });
+        } else {
+          // Count volunteers with this skill in zone
+          const cnt = volunteers.filter(
+            (v) => (v.location?.zone || 'Unassigned') === zone &&
+              (v.skills || []).map((s) => s.toLowerCase().trim()).includes(skill)
+          ).length;
+          if (cnt < count) {
+            gaps.push({ zone, skill, tasksNeedingSkill: count, volunteersWithSkill: cnt });
+          }
+        }
+      });
+    });
+
+    gaps.sort((a, b) => b.tasksNeedingSkill - a.tasksNeedingSkill);
+
+    return res.json(gaps);
+  } catch (error) {
+    console.error('Skill gaps error:', error);
+    return res.status(500).json({ message: 'Failed to fetch skill gaps.' });
+  }
+});
+
+router.get('/leaderboard', protect, async (req, res) => {
+  try {
+    const volunteers = await Volunteer.find({ role: 'volunteer' })
+      .select('name reputationScore totalPoints totalTasks badges location experience')
+      .sort({ reputationScore: -1, totalPoints: -1, totalTasks: -1 })
+      .limit(20);
+
+    return res.json(volunteers);
+  } catch (error) {
+    console.error('Leaderboard error:', error);
+    return res.status(500).json({ message: 'Failed to fetch leaderboard.' });
+  }
+});
+
 module.exports = router;
+

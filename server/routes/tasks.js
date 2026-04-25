@@ -196,10 +196,49 @@ router.put('/:id', protect, async (req, res) => {
           { task: task._id, volunteer: task.assignedTo, status: 'Active' },
           { $set: { status: 'Completed', completedAt: task.completedAt } }
         );
-        await Volunteer.findByIdAndUpdate(task.assignedTo, {
-          $inc: { totalTasks: 1 },
-          $set: { availability: true },
-        });
+
+        // Award points and update reputation
+        const urgencyPoints = { Low: 5, Medium: 10, Critical: 20 };
+        const pointsEarned = urgencyPoints[task.urgency] || 10;
+
+        const volunteer = await Volunteer.findById(task.assignedTo);
+        if (volunteer) {
+          volunteer.totalTasks += 1;
+          volunteer.totalPoints = (volunteer.totalPoints || 0) + pointsEarned;
+          volunteer.availability = true;
+
+          // Update reputation score (weighted moving average)
+          const currentRep = volunteer.reputationScore || 50;
+          const taskWeight = Math.min(volunteer.totalTasks, 20);
+          volunteer.reputationScore = Math.min(
+            100,
+            Math.round((currentRep * taskWeight + Math.min(100, currentRep + pointsEarned)) / (taskWeight + 1))
+          );
+
+          // Award milestone badges
+          const newBadges = [];
+          if (volunteer.totalTasks === 1 && !volunteer.badges.includes('First Responder'))
+            newBadges.push('First Responder');
+          if (volunteer.totalTasks === 5 && !volunteer.badges.includes('Committed'))
+            newBadges.push('Committed');
+          if (volunteer.totalTasks === 10 && !volunteer.badges.includes('Veteran'))
+            newBadges.push('Veteran');
+          if (volunteer.totalTasks === 25 && !volunteer.badges.includes('Elite'))
+            newBadges.push('Elite');
+          if (task.urgency === 'Critical' && !volunteer.badges.includes('Crisis Hero'))
+            newBadges.push('Crisis Hero');
+
+          if (newBadges.length) {
+            volunteer.badges = [...(volunteer.badges || []), ...newBadges];
+          }
+
+          await volunteer.save();
+        } else {
+          await Volunteer.findByIdAndUpdate(task.assignedTo, {
+            $inc: { totalTasks: 1, totalPoints: pointsEarned },
+            $set: { availability: true },
+          });
+        }
       }
     } else if (task.status === 'In Progress' && task.assignedTo) {
       await setVolunteerAvailability(task.assignedTo, false);
