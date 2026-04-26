@@ -1,22 +1,32 @@
-/* ── TOKENS ── */
+/* ── TOKENS — VolunteerSync Design Spec ── */
 :root {
-  --bg-0: #0d1117;
-  --bg-1: #13181f;
-  --bg-2: #1a2130;
-  --bg-3: #232d3f;
-  --border: rgba(255,255,255,0.07);
-  --border-bright: rgba(255,255,255,0.14);
-  --text: #e2e8f0;
-  --text-muted: #6b7a99;
-  --text-dim: #8892a4;
-  --accent: #00c2c7;
-  --accent-2: #3b82f6;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --success: #22c55e;
-  --sidebar-w: 62px;
+  --blue: #1A56DB;
+  --red: #E02424;
+  --amber: #F59E0B;
+  --green: #057A55;
+  --teal: #0694A2;
+  --bg-0: #111827;
+  --bg-1: #1F2937;
+  --bg-2: #1F2937;
+  --bg-3: #374151;
+  --border: #374151;
+  --border-bright: rgba(255,255,255,0.16);
+  --text: #F9FAFB;
+  --text-muted: #9CA3AF;
+  --text-dim: #9CA3AF;
+  --accent: #0694A2;
+  --accent-2: #1A56DB;
+  --danger: #E02424;
+  --warning: #F59E0B;
+  --success: #057A55;
+  --sidebar-w: 64px;
   --topbar-h: 52px;
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --radius-card: 8px;
+  --radius-input: 6px;
+  --radius-badge: 999px;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --transition: all 0.2s ease;
+  font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
   font-size: 14px;
   color-scheme: dark;
 }
@@ -24,8 +34,8 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg-0);color:var(--text);min-height:100vh;}
+h1,h2,h3,h4{font-family:'DM Sans',sans-serif;color:var(--text);font-weight:700;}
 a{color:inherit;text-decoration:none;}
-button{cursor:pointer;font:inherit;border:none;background:none;}
 input,select,textarea{font:inherit;}
 h1,h2,h3,h4{color:var(--text);}
 p{margin:0;}
@@ -443,3 +453,29 @@ textarea{resize:vertical;}
 .dashboard-grid .panel,.analytics-grid .panel{min-width:0;}
 .nav-shell{display:none;}
 .nav-links,.nav-actions,.nav{display:none;}
+
+/* ── LOGIN SPLIT LAYOUT ── */
+.login-split{display:grid;grid-template-columns:55fr 45fr;min-height:100vh;position:fixed;inset:0;z-index:500;}
+.login-split__hero{background:#0D1117;display:flex;flex-direction:column;justify-content:space-between;padding:3rem 2.5rem;position:relative;overflow:hidden;}
+.login-split__hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(6,148,162,0.12),transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(26,86,219,0.1),transparent 50%);pointer-events:none;}
+.login-split__brand{position:relative;z-index:1;}
+.login-split__wordmark{font-family:'DM Sans',sans-serif;font-size:2.4rem;font-weight:800;color:#F9FAFB;letter-spacing:-0.02em;}
+.login-split__tagline{font-size:1rem;color:#9CA3AF;margin-top:0.5rem;}
+.login-split__stats{display:grid;gap:0.75rem;position:relative;z-index:1;max-width:320px;}
+.login-split__stat{background:#1F2937;border:1px solid #374151;border-radius:8px;padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;}
+.login-split__stat--alert{border-left:3px solid #E02424;}
+.login-split__stat-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#9CA3AF;display:flex;align-items:center;gap:0.5rem;}
+.login-split__stat-value{font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:800;color:#F9FAFB;}
+.login-split__footer{font-size:0.75rem;color:#4B5563;position:relative;z-index:1;}
+.login-split__form-panel{background:#111827;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.login-split__form-inner{width:100%;max-width:400px;display:grid;gap:1.5rem;}
+.login-split__form-title{font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:800;text-align:center;}
+.login-split__form-sub{text-align:center;color:#9CA3AF;font-size:0.9rem;}
+.login-split__register{text-align:center;font-size:0.85rem;color:#9CA3AF;}
+.login-split__register a{color:#1A56DB;font-weight:600;}
+.login-split__powered{text-align:center;font-size:0.7rem;letter-spacing:0.15em;color:#0694A2;font-weight:600;padding:0.6rem;border:1px solid rgba(6,148,162,0.2);border-radius:999px;background:rgba(6,148,162,0.06);}
+.pulse-dot{width:6px;height:6px;border-radius:50%;display:inline-block;animation:pulse-dot 1.5s infinite;}
+.pulse-dot--green{background:#057A55;}
+.pulse-dot--red{background:#E02424;}
+.pulse-dot--amber{background:#F59E0B;}
+@media(max-width:768px){.login-split{grid-template-columns:1fr;}.login-split__hero{display:none;}}

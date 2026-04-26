@@ -23,44 +23,81 @@ export default function Login() {
   }
 
   return (
-    <div className="auth-shell">
-      <section className="auth-card">
-        <p className="eyebrow">Welcome back</p>
-        <h1>Sign in to your command center</h1>
-        <p>Coordinators can dispatch faster. Volunteers can update availability from the field.</p>
+    <div className="login-split">
+      {/* Left — Atmospheric branding panel */}
+      <div className="login-split__hero">
+        <div className="login-split__brand">
+          <h1 className="login-split__wordmark">VolunteerSync</h1>
+          <p className="login-split__tagline">Operational Command Center</p>
+        </div>
 
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="field">
-            <label>Email</label>
-            <input
-              type="email"
-              value={form.email}
-              onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-              required
-            />
+        <div className="login-split__stats">
+          <div className="login-split__stat">
+            <span className="login-split__stat-label">
+              <span className="pulse-dot pulse-dot--green" /> ACTIVE DEPLOYMENTS
+            </span>
+            <strong className="login-split__stat-value">124</strong>
           </div>
-
-          <div className="field">
-            <label>Password</label>
-            <input
-              type="password"
-              value={form.password}
-              onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-              required
-            />
+          <div className="login-split__stat login-split__stat--alert">
+            <span className="login-split__stat-label">
+              <span className="pulse-dot pulse-dot--red" /> CRITICAL ALERTS
+            </span>
+            <strong className="login-split__stat-value">3</strong>
           </div>
+          <div className="login-split__stat">
+            <span className="login-split__stat-label">UNDER-SERVED ZONES</span>
+            <strong className="login-split__stat-value">2</strong>
+          </div>
+        </div>
 
-          {status.error ? <p className="form-message form-message--error">{status.error}</p> : null}
+        <p className="login-split__footer">Built for Hack2Skill Solution Challenge 2026</p>
+      </div>
 
-          <button type="submit" className="btn btn--primary btn--full" disabled={status.loading}>
-            {status.loading ? 'Signing in...' : 'Login'}
-          </button>
-        </form>
+      {/* Right — Sign-in form */}
+      <div className="login-split__form-panel">
+        <div className="login-split__form-inner">
+          <h2 className="login-split__form-title">Sign In</h2>
+          <p className="login-split__form-sub">Enter your credentials to access the system.</p>
 
-        <p className="auth-footer">
-          Need an account? <Link to="/register">Create one</Link>
-        </p>
-      </section>
+          <form className="form" onSubmit={handleSubmit}>
+            <div className="field">
+              <label>EMAIL ADDRESS</label>
+              <input
+                type="email"
+                placeholder="name@organization.org"
+                value={form.email}
+                onChange={(e) => setForm((c) => ({ ...c, email: e.target.value }))}
+                required
+              />
+            </div>
+
+            <div className="field">
+              <label>PASSWORD</label>
+              <input
+                type="password"
+                placeholder="••••••••••"
+                value={form.password}
+                onChange={(e) => setForm((c) => ({ ...c, password: e.target.value }))}
+                required
+              />
+            </div>
+
+            {status.error ? <p className="form-message form-message--error">{status.error}</p> : null}
+
+            <button type="submit" className="btn btn--primary btn--full" disabled={status.loading}>
+              {status.loading ? 'Authenticating...' : 'ACCESS TERMINAL →'}
+            </button>
+          </form>
+
+          <p className="login-split__register">
+            New volunteer? <Link to="/register">Create account →</Link>
+          </p>
+
+          <div className="login-split__powered">
+            ✦ POWERED BY GEMINI AI
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
