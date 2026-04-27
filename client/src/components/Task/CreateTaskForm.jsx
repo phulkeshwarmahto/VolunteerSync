@@ -248,10 +248,11 @@ export default function CreateTaskForm({ onCreate, creating }) {
                 type="button" 
                 className="btn btn--secondary" 
                 onClick={handleGPS} 
+                disabled={gpsLoading}
                 title="Use my GPS"
                 style={{ padding: '0 0.75rem', flexShrink: 0 }}
               >
-                📍 GPS
+                {gpsLoading ? '⏳' : '📍 GPS'}
               </button>
             </div>
             {form.gpsLocation && (
