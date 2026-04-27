@@ -64,20 +64,45 @@ export default function CreateTaskForm({ onCreate, creating }) {
     setCrisisDesc('');
   }
 
+  const [gpsLoading, setGpsLoading] = useState(false);
+
+  async function fetchCityFromCoords(lat, lon) {
+    try {
+      setGpsLoading(true);
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+      const data = await response.json();
+      const fetchedCity = data.address?.city || data.address?.state_district || data.address?.county || data.address?.state || '';
+      
+      const validCities = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata', 'Surat', 'Pune', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal'];
+      const matchedCity = validCities.find(c => fetchedCity.toLowerCase().includes(c.toLowerCase())) || 'Mumbai';
+      
+      const coords = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+      setForm((prev) => ({ ...prev, gpsLocation: coords, city: matchedCity }));
+    } catch (err) {
+      console.error('Reverse geocoding failed:', err);
+      setForm((prev) => ({ ...prev, gpsLocation: `${lat.toFixed(5)}, ${lon.toFixed(5)}`, city: 'Mumbai' }));
+    } finally {
+      setGpsLoading(false);
+    }
+  }
+
   function handleGPS() {
+    setGpsLoading(true);
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const coords = `${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)}`;
-          setForm((prev) => ({ ...prev, gpsLocation: coords }));
+          fetchCityFromCoords(position.coords.latitude, position.coords.longitude);
         },
         (error) => {
           console.warn('Geolocation error:', error.message);
-          alert('Failed to get GPS location. Please ensure location services are enabled.');
-        }
+          fetchCityFromCoords(19.0760, 72.8777);
+          alert('Using fallback GPS location. Ensure location services are enabled for accurate tracking.');
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
     } else {
-      alert('Geolocation is not supported by your browser.');
+      fetchCityFromCoords(19.0760, 72.8777);
+      alert('Geolocation not supported. Using fallback coordinates.');
     }
   }
 

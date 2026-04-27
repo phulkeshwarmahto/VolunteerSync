@@ -133,12 +133,10 @@ export default function TaskCard({
         </div>
       ) : null}
 
-      {isCoordinator ? (
+      {isCoordinator && task.status === 'Open' ? (
         <div className="task-matches">
           <AIMatchResult task={task} onAssign={onAssign} assigning={isBusy} />
-          {task.status !== 'Completed' && (
-            <TeamFormationPanel taskId={task.id} taskTitle={task.title} />
-          )}
+          <TeamFormationPanel taskId={task.id} taskTitle={task.title} />
         </div>
       ) : null}
     </article>
