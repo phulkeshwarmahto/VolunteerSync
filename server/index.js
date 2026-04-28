@@ -17,14 +17,8 @@ const configuredOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .filter(Boolean);
 
 const corsOptions = {
-  origin(origin, callback) {
-    if (!origin || configuredOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: false,
+  origin: '*',
+  credentials: true,
 };
 
 const io = new Server(server, {
